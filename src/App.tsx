@@ -31,8 +31,23 @@ function App() {
     setComments(data);
   }
 
+const handleLogin = () => {
+  setIsLogged(true);
+  localStorage.setItem('isLogged', 'true');
+};
+
+const handleLogout = () => {
+  setIsLogged(false);
+  localStorage.removeItem('isLogged');
+};
+
   useEffect(() => {
     getPost();
+    
+    const isUserLogged = localStorage.getItem('isLogged');
+    if (isUserLogged) {
+      setIsLogged(JSON.parse(isUserLogged));
+    }
   }, []);
   
   return (
@@ -41,11 +56,11 @@ function App() {
     <Routes>
 
       <Route element={<GuestRoute isLogged={isLogged} />} >
-        <Route path="/login" element={<Login setIsLogged={setIsLogged} />}/>
+        <Route path="/login" element={<Login handleLogin={handleLogin} />}/>
       </Route>
 
       <Route element={<ProtectedRoute isLogged={isLogged} />}>
-        <Route path="/" element={<Home posts={posts} />}/>
+        <Route path="/" element={<Home posts={posts} handleLogout={handleLogout} />}/>
         <Route path="/:idPost/comments" element={<Comments comments={comments} getComments={getComments} posts={posts} />}/>
       </Route>
       <Route path="/404" element={<RouteNotFound />} />
