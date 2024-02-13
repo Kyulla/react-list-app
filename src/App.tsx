@@ -11,15 +11,24 @@ import Redirect from "./components/Redirect";
 import RouteNotFound from "./components/RouteNotFound";
 import Home from "./components/Home";
 import { Post } from "./Interfaces/post";
+import Comments from "./components/Comments";
+import { Comment } from "./Interfaces/comment";
 
 function App() {
   const [isLogged, setIsLogged] = useState<boolean>(false);
   const [posts, setPosts] = useState<Post[] | null>(null);
+  const [comments, setComments] = useState<Comment[] | null>(null);
 
   const getPost = async () => {
     const response = await fetch("https://jsonplaceholder.typicode.com/posts/");
     const data = await response.json();
     setPosts(data);
+  }
+
+  const getComments = async (postId: string) => {
+    const response = await fetch(`https://jsonplaceholder.typicode.com/posts/${postId}/comments`);
+    const data = await response.json();
+    setComments(data);
   }
 
   useEffect(() => {
@@ -37,6 +46,7 @@ function App() {
 
       <Route element={<ProtectedRoute isLogged={isLogged} />}>
         <Route path="/" element={<Home posts={posts} />}/>
+        <Route path="/:idPost/comments" element={<Comments comments={comments} getComments={getComments} posts={posts} />}/>
       </Route>
       <Route path="/404" element={<RouteNotFound />} />
       <Route path="*" element={<Redirect />} />
