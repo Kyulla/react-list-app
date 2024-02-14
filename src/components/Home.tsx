@@ -9,12 +9,9 @@ export default function Home({posts, handleLogout}: {posts: Post[] | null; handl
             <button onClick={() => handleLogout()}>Logout</button>
             {posts.map((post) => (
                 <>
-                    <Link to={post.id.toString() + "/comments"}>
-                        <span key={post.id}>
-                            <h1>{post.title}</h1>
-                            <p>{post.body}</p>
-                        </span>
-                    </Link>
+                    <span key={post.id}>
+                        <li><Link to={post.id.toString() + "/comments"}>{post.title}</Link></li>
+                    </span>
                 </>
         ))}
         </div>
